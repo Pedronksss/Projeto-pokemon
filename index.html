@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémnon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Trabalhando com <span>HTML</span> <span>CSS</span> e usando o <span>JavaScript</span> para realizar e fazer
+            consultas nesse site</h1>
+        <hr>
+
+
+        <div class="imagem">
+
+            <img src="img/pokemon-logo.png">
+           
+
+        </div>
+
+        <form class="goup-form">
+            <h1>Nome ou Numero do Pokémon</h1>
+            <input type="text" id="name" placeholder="Exemplo: Pikacho ou 25" required>
+            <input class="button" type="submit" value="BUSCAR">
+
+        </form>
+        <div id="imgPokemon">
+           
+            
+        </div>
+        <div id="content">...</div>
+    </div>
+
+
+    <script>
+
+        var formulario = document.querySelector('form')
+
+        formulario.addEventListener('submit', function(e){
+            //bloqueia o refresh da pagina
+            e.preventDefault()
+            
+            
+            // ourl da pesquisa
+            let urlFoem = "https://pokeapi.co/api/v2/pokemon/"
+
+            //valor do input name
+            let nome = document.getElementById("name")
+            
+            //concatena a url com o input name 
+            urlFoem = urlFoem + this.name.value
+
+           //vai transformar os valores em minusculos
+            urlFoem = urlFoem.toLocaleLowerCase()
+
+            //id content
+            let resposta = document.getElementById('content')
+
+            //id imgPokemon
+            let imagem = document.getElementById('imgPokemon')
+
+            //reposta em html
+            let html = ''
+
+            fetch(urlFoem)
+                .then(resposta => resposta.json())
+                .then(function(data){
+                    console.log(data)
+                    html = 'Nome: ' + maiuscula(data.name) + '<br>'
+                    html = html + 'type: ' + maiuscula(data.types[0].type.name)
+                    resposta.innerHTML = html
+
+                    imagem.innerHTML = "<img src='" + data.sprites.front_default + "'> <img src = '" + data.sprites.back_default  + "'> "
+                })
+
+                .catch (function(err) {
+                   if(err ==  'SyntaxError: Unexpected token N in JSON at position 0'){
+                   html = 'Pokémon não encontrado😒'}
+                    else{
+                    html = 'ERRO:' + err
+                   }
+
+                   resposta.innerHTML= html
+                   imagem.innerHTML = ""
+
+                
+
+            })
+
+
+        });
+
+        function maiuscula(val){
+            return val[0].toUpperCase() + val.substr(1)
+        }
+
+
+
+        </script>
+
+</body>
+
+</html>
